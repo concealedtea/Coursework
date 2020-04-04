@@ -1,0 +1,4 @@
+rm main.o hello.o
+rm hello
+rm: cannot remove ‘hello’: No such file or directory
+make: [Makefile:30: spotless] Error 1 (ignored)

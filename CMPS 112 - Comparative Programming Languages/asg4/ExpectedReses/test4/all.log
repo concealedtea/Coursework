@@ -1,0 +1,3 @@
+cc -g -O0 -Wall -Wextra -c main.c
+cc -g -O0 -Wall -Wextra -c hello.c
+cc -g -O0 -Wall -Wextra main.o hello.o -o hello

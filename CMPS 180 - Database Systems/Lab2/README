@@ -1,0 +1,4 @@
+Run Instructions: 
+1) Run create.sql to wipe out the schema and reinstate the database tables
+2) Run lab2_data_loading.sql to fill data with test data
+3) Run individual "queryX.sql" for each individual query

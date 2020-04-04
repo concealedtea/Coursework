@@ -1,0 +1,13 @@
+cid + queue.java
+javac queue.java
+cid + qtest.java
+javac qtest.java
+echo Main-class: qtest >Manifest
+jar cvfm qtest Manifest queue.class qtest.class queue\$emptyexn.class queue\$node.class
+added manifest
+adding: queue.class(in = 1001) (out= 597)(deflated 40%)
+adding: qtest.class(in = 682) (out= 452)(deflated 33%)
+adding: queue$emptyexn.class(in = 256) (out= 208)(deflated 18%)
+adding: queue$node.class(in = 423) (out= 292)(deflated 30%)
+chmod +x qtest
+rm Manifest

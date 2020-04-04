@@ -1,0 +1,61 @@
+head	1.2;
+access;
+symbols;
+locks;
+comment	@# @;
+
+
+1.2
+date	2016.11.21.22.06.16;	author -;	state -;
+branches;
+next	1.1;
+
+1.1
+date	2016.11.08.23.52.34;	author -;	state -;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@-
+@
+text
+@write('$Id: group3.tests,v 1.1 2016-11-08 15:52:34-08 - - $'), nl.
+[database].
+[functions].
+fly(sjc,sjc).
+fly(dfw,dfw).
+@
+
+
+1.1
+log
+@-
+@
+text
+@d1 1
+a1 6
+write( '$Id: group3.tests,v 1.2 2011-06-02 20:06:45-07 - - $' ), nl.
+
+
+
+
+
+a2 2
+
+
+a3 2
+
+
+a4 2
+
+
+a5 2
+
+
+@

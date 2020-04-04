@@ -1,0 +1,215 @@
+#!/usr/bin/perl
+# Names: Julius Fan (jzfan), Lucas Simon (lasimon)
+use strict;
+use warnings;
+use Switch;
+use Getopt::Std;
+
+my %macros  = ();
+my %targets = ();
+my $cur_target;
+my $debug_mode   = 0;
+my $input_target = 'all';
+
+sub parse {
+    die '$Makefile does not exist' unless -r "./Makefile";
+    open( my $Makefile, "<", "Makefile" ) 
+    or die "Cannot open Makefile: $!";
+    if ( scalar(@ARGV) >= 1 ) {
+        $debug_mode = $ARGV[0] eq '-d';
+    }
+    unless ( scalar(@ARGV) == 0 
+    or ( scalar(@ARGV) == 1 and $debug_mode ) ) {
+        $input_target = $ARGV[ scalar(@ARGV) - 1 ];
+    }
+    my @lines = <$Makefile>;
+    my $i     = 1;
+    for my $line (@lines) {
+        read_line( $line, $i );
+        $i += 1;
+    }
+}
+
+sub read_line {
+    my $line        = shift;
+    my $line_number = shift;
+    switch ($line) {
+        case m/^#\s/ { }
+        case m/^\t/ {
+            if ( !exists $cur_target->{'commands'} ) {
+                die "No target for command!\n$line";
+            }
+
+            $line =~ s/^\s+//;
+
+            my $print_cmd        = 1;
+            my $continue_if_fail = 0;
+            if ( $line =~ /^@/ ) {
+                $print_cmd = 0;
+                $line = substr( $line, 1 );
+                $line =~ s/^\s+//;
+            }
+            elsif ( $line =~ /^-/ ) {
+                $continue_if_fail = 1;
+                $line = substr( $line, 1 );
+                $line =~ s/^\s+//;
+            }
+            my $cmd = handle_str($line);
+
+            push $cur_target->{'commands'},
+              {
+                'continue_if_fail' => $continue_if_fail,
+                'print_cmd'        => $print_cmd,
+                'cmd'              => $cmd,
+                'line_num'         => $line_number
+              };
+        }
+        case m/^[^\s=]+\s*=\s*.+/ {
+            if ( $line =~ /^([^\s]+)\s*=\s*(.+)/ ) {
+                my $macro_name = $1;
+                my $macro      = handle_str($2);
+                $macros{$macro_name} = $macro;
+            }
+        }
+        case m/^.+:/ {
+            if ( $line =~ /^([^\s]+)\s*:\s*(.+)/ ) {
+                my $target_name = handle_str($1);
+                my @prereqs = split( /\s+/, handle_str($2) );
+                if ( $2 eq '' ) {    # Want () and not ('')
+                    @prereqs = ();
+                }
+                my @cmds       = ();
+                my $target_obj = {
+                    'name'     => $target_name,
+                    'prereqs'  => \@prereqs,
+                    'commands' => \@cmds,
+                    'made'     => 0
+                };
+                $targets{$target_name} = $target_obj;
+                $cur_target = $target_obj;
+            }
+        }
+        else { }
+    }
+}
+
+sub handle_target {
+    my $target_name      = shift;
+    my $percent_value    = shift;
+    my $full_target_name = $target_name;
+    $full_target_name =~ s/%/$percent_value/g;
+    if ( !exists $targets{$target_name} ) {
+        die 'Missing file: ' . $target_name unless -e $target_name;
+        return;
+    }
+    if ($debug_mode) {
+        print "-=) Run target ", $target_name,
+            " (", $full_target_name, ")\n";
+    }
+    my $prereqs = $targets{$target_name}->{'prereqs'};
+    my $cmds    = $targets{$target_name}->{'commands'};
+    foreach my $p (@$prereqs) {
+        my $prereq = substr( $p, 0 );
+        $prereq =~ s/%/$percent_value/g;
+        if ( exists $targets{$prereq} ) {    # Run base prereq if needed
+            handle_target( $prereq, '' );
+        }
+        for my $i ( 1 .. length($prereq) - 1 ) {    # Handle %
+            my $other_target_name = '%' . substr( $prereq, $i );
+            if ( exists $targets{$other_target_name} ) {
+                handle_target( $other_target_name, 
+                    substr( $prereq, 0, $i ) );
+            }
+        }
+        $target_name = '%' . $target_name;
+    }
+
+    my $first_prereq = '';
+    if ( exists $prereqs->[0] ) {
+        $first_prereq = substr( $prereqs->[0], 0 );
+        $first_prereq =~ s/%/$percent_value/g;
+    }
+    for my $cmd (@$cmds) {
+        my $cmd_text = $cmd->{'cmd'};
+        $cmd_text =~ s/\$</$first_prereq/g;
+        $cmd_text =~ s/\$@/$full_target_name/g;
+        if ( $cmd->{'print_cmd'} ) {
+            print $cmd_text;
+        }
+        system($cmd_text);
+        my $term_signal = $? & 0x7F;
+        my $core_dumped = $? & 0x80;
+        my $exit_status = ( $? >> 8 ) & 0xFF;
+
+        if ( $term_signal == 0 ) {
+            if ( $exit_status != 0 && !$cmd->{'continue_if_fail'} ) {
+                die "make: [Makefile:", $cmd->{'line_num'}, ": ",
+                  $full_target_name, "] Error ", $exit_status;
+            }
+            elsif ( $exit_status != 0 ) {
+                print "make: [Makefile:", $cmd->{'line_num'}, ": ",
+                  $full_target_name, "] Error ", 
+                    $exit_status, " (ignored)\n";
+            }
+        }
+        else {
+            if ( $exit_status != 0 && !$cmd->{'continue_if_fail'} ) {
+                die "make: [Makefile:", $cmd->{'line_num'}, ": ",
+                  $full_target_name,
+                  "] Term Sig $term_signal\nCore Dump: $core_dumped";
+            }
+            elsif ( $exit_status != 0 ) {
+                print "make: [Makefile:", $cmd->{'line_num'}, ": ",
+                  $full_target_name,
+                  "] Term Sig $term_signal\nCore Dump: $core_dumped";
+            }
+        }
+    }
+}
+
+sub handle_str {
+    my $str            = shift;
+    my $final_str      = '';
+    my $last_was_macro = 0;
+    my $in_macro       = 0;
+    my $macro          = '';
+    for my $i ( 0 .. length($str) - 1 ) {
+        my $char  = substr( $str, $i, 1 );
+        my $char2 = substr( $str, $i, 2 );
+        if ($last_was_macro) {
+            $last_was_macro = 0;
+            next;
+        }
+
+        if ($in_macro) {
+            if ( $char eq '}' ) {
+                $in_macro = 0;
+                $final_str .= $macros{$macro};
+            }
+            elsif ( $char eq '{' ) {
+
+                # Do nothing
+            }
+            else {
+                $macro .= $char;
+            }
+        }
+        else {
+            if ( $char2 eq '${' ) {
+                $in_macro       = 1;
+                $macro          = '';
+                $last_was_macro = 1;
+            }
+            elsif ( $char2 eq '$$' ) {
+                $final_str .= '$';
+            }
+            else {
+                $final_str .= $char;
+            }
+        }
+    }
+    return $final_str;
+}
+
+parse();
+handle_target( $input_target, '' );

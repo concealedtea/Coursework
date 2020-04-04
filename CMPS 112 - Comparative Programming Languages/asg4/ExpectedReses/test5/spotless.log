@@ -1,0 +1,2 @@
+rm queue.class qtest.class queue\$emptyexn.class queue\$node.class
+rm qtest

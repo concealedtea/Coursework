@@ -1,0 +1,6 @@
+operator s reg 0170 is unimplemented
+operator s reg 0171 is unimplemented
+operator l reg 0170 is unimplemented
+operator l reg 0171 is unimplemented
+stack empty
+End_of_file

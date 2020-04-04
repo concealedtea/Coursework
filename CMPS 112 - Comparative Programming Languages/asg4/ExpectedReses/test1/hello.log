@@ -1,0 +1,7 @@
+gcc hello.c -o hello
+hello.c: In function ‘main’:
+hello.c:4:4: warning: implicit declaration of function ‘printf’ [-Wimplicit-function-declaration]
+    printf ("Hello, world\n");
+    ^~~~~~
+hello.c:4:4: warning: incompatible implicit declaration of built-in function ‘printf’
+hello.c:4:4: note: include ‘<stdio.h>’ or provide a declaration of ‘printf’

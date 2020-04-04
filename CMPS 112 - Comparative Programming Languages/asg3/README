@@ -1,0 +1,42 @@
+Julius Fan - jzfan@ucsc.edu
+CMPS 112 - Comparative Programming Languages
+Assignment 3
+Sources: Piazza, Mackey's example code from either: 
+/Assignments/asg3-smalltalk-hzip/example-files 
+/Languages/smalltalk/Examples
+
+NAME
+    hzip.st - file compression and decompression utility
+SYNOPSIS
+    hzip.st -dtcu inputfile [outputfile]
+DESCRIPTION
+        A file is either compressed (with the -c option),
+    uncompressed (with the -u option), one of which is required,
+    unless the -t option is specified. The input filename is required.
+    If the output filename is not specified, output is written
+    to the standard output.
+OPTIONS
+        All options must be specified as the first word 
+    following the name of the command, unlike the standard getopt(3)
+    used for C programs. Exactly one of the options -t, -c,
+    or -u is required.
+
+    -d Debug information is printed for the benefit 
+    of the application author. Exact details are not specified.
+
+    -t The compression algorithm is activated, and the 
+    decoding tree is printed to the standard output. 
+    The output filename may not be specified.
+
+    -c The input file is compressed and written to the 
+    output file, if specified, or to the standard output, if not.
+
+    -u The input file is assumed to be compressed, 
+    and is uncompressed, written to the output file,
+    if specified, or to the standard output, if not.
+
+OPERANDS
+            There are one or two filename operands. 
+    The first is the input filename and the second is the output
+    filename. If no output filename is specified, the standard
+    output is written.

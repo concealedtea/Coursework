@@ -1,0 +1,33 @@
+cid Makefile main.c hello.c hello.h
+cid: % ci -m- -u Makefile main.c hello.c hello.h
+RCS/Makefile,v  <--  Makefile
+file is unchanged; reverting to previous revision 1.1
+RCS/main.c,v  <--  main.c
+file is unchanged; reverting to previous revision 1.1
+RCS/hello.c,v  <--  hello.c
+file is unchanged; reverting to previous revision 1.1
+RCS/hello.h,v  <--  hello.h
+file is unchanged; reverting to previous revision 1.1
+cid: [Makefile main.c hello.c hello.h]
+cid: % rcs -q -U Makefile main.c hello.c hello.h
+cid: % ls -goaFd Makefile main.c hello.c hello.h RCS/Makefile,v RCS/main.c,v RCS/hello.c,v RCS/hello.h,v | cut -c1-80
+-rw------- 1 129 Nov 26 20:09 hello.c
+-rw------- 1 124 Nov 26 20:09 hello.h
+-rw------- 1 120 Nov 26 20:09 main.c
+-rw------- 1 462 Nov 26 20:09 Makefile
+-r-------- 1 279 Nov 26 20:09 RCS/hello.c,v
+-r-------- 1 274 Nov 26 20:09 RCS/hello.h,v
+-r-------- 1 270 Nov 26 20:09 RCS/main.c,v
+-r-------- 1 611 Nov 26 20:09 RCS/Makefile,v
+cid: % ident -q Makefile main.c hello.c hello.h
+Makefile:
+     $Id: Makefile,v 1.1 2018-11-26 19:31:57-08 - - $
+
+main.c:
+     $Id: main.c,v 1.1 2018-11-26 19:31:57-08 - - $
+
+hello.c:
+     $Id: hello.c,v 1.1 2018-11-26 19:31:57-08 - - $
+
+hello.h:
+     $Id: hello.h,v 1.1 2018-11-26 19:31:57-08 - - $

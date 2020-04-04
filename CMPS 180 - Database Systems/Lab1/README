@@ -1,0 +1,3 @@
+Run Instructions: 
+1) Run create.sql to wipe out the schema and reinstate the database tables
+2) Run lab1_data_loading.sql to fill data with test data (error has been fixed in the faulty loading data)
