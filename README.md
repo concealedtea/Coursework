@@ -3,6 +3,9 @@
 ## CMPS 112 (Fall 2018) - Comparative Programming Languages   
 Technologies used: Scheme, Ocaml, Smalltalk, Perl, Prolog  
 
+## CMPS 142 (Fall 2019) - Advanced Machine Learning  
+Technologies used: Python (Tensorflow, Scikit-Learn)  
+
 ## CSE 180 (Winter 2019) - Database Systems  
 Technologies used: NoSQL, C, Java  
 
