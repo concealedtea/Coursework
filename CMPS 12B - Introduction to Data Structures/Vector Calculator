@@ -1,0 +1,149 @@
+import java.util.*;
+import java.io.*;
+
+/**
+ * Vector Calculator with Sum, Difference, Magnitude, Scalar Product, Dot Product, and Angle finding.
+ * Takes user input and loops if told to.
+ * @author Julius Zhesi Fan
+ * @date 12/03/2016
+ */
+public class Vector {
+	double VectorX;
+	double VectorY;
+
+	public static void main(String[] args) {
+		Scanner input = new Scanner(System.in);
+		System.out.println("Please input Vector 1, X coordinate");
+		double VectorOneX = input.nextDouble();
+		System.out.println("Please input Vector 1, Y coordinate");
+		double VectorOneY = input.nextDouble();
+		System.out.println("Please input Vector 2, X coordinate");
+		double VectorTwoX = input.nextDouble();
+		System.out.println("Please input Vector 2, Y coordinate");
+		double VectorTwoY = input.nextDouble();
+		System.out.println("Please input a scalar");
+		double scalar = input.nextDouble();
+		Vector VecOne = new Vector(VectorOneX, VectorOneY);
+		Vector VecTwo = new Vector(VectorTwoX, VectorTwoY);
+		System.out.println("What would you like to do today:");
+		System.out.println("Sum | Difference | Magnitude | Scalar | Dot | Angle");
+		System.out.println("Run all tests (ALL)");
+		String option = input.next();
+		if (option.equals("Sum")){
+			System.out.print("Sum: ");
+			VectorSum(VecOne, VecTwo);
+		}
+		else if(option.equals("Difference")){
+			System.out.print("Difference: ");
+			VectorDifference(VecOne, VecTwo);
+		}
+		else if (option.equals("Magnitude")){
+			System.out.print("Mag of Vector One: ");
+			VectorMag(VecOne);
+			System.out.print("Mag of Vector Two: ");
+			VectorMag(VecTwo);
+		}
+		else if (option.equals("Scalar")){
+			System.out.print("Product of Vector One and Scalar: ");
+			VectorScalar(VecOne, scalar);
+			System.out.print("Product of Vector Two and Scalar: ");
+			VectorScalar(VecTwo, scalar);
+		}
+		else if (option.equals("Dot")){
+			System.out.print("Dot Product: ");
+			VectorDot(VecOne,VecTwo);
+		}
+		else if (option.equals("Angle")){
+			System.out.print("Angle between Vectors: ");
+			VectorAngle(VecOne,VecTwo);
+		}
+		else if (option.equals("ALL")){
+			System.out.print("Sum: ");
+			VectorSum(VecOne, VecTwo);
+			System.out.print("Difference: ");
+			VectorDifference(VecOne, VecTwo);
+			System.out.print("Mag of Vector One: ");
+			VectorMag(VecOne);
+			System.out.print("Mag of Vector Two: ");
+			VectorMag(VecTwo);
+			System.out.print("Product of Vector One and Scalar: ");
+			VectorScalar(VecOne, scalar);
+			System.out.print("Product of Vector Two and Scalar: ");
+			VectorScalar(VecTwo, scalar);
+			System.out.print("Dot Product: ");
+			VectorDot(VecOne,VecTwo);
+			System.out.print("Angle between Vectors: ");
+			VectorAngle(VecOne,VecTwo);
+		}
+		else {
+			System.out.println("Could not read, restarting");
+			main(args);
+		}
+		System.out.println("Would you like to try another? (y/n)");
+		String yesNo = input.next();
+		if (yesNo.equals("y")){
+			main(args);
+		}
+	}
+
+	public Vector() { //Basic Constructor
+	}
+
+	public Vector(double x, double y) { //Input Constructor
+		VectorX = x;
+		VectorY = y;
+	}
+
+	public double getVectorX() { //Gets X Value
+		return VectorX;
+	}
+
+	public double getVectorY() { //Gets Y Value
+		return VectorY;
+	}
+
+	public static Vector VectorSum(Vector VectorOne, Vector VectorTwo) { //Adds 2 Vectors
+		double vectorX = VectorOne.getVectorX() + VectorTwo.getVectorX();
+		double vectorY = VectorOne.getVectorY() + VectorTwo.getVectorY();
+		Vector vecSum = new Vector(vectorX, vectorY);
+		System.out.println("(" + vectorX + "," + vectorY + ")");
+		return vecSum;
+	}
+
+	public static Vector VectorDifference(Vector VectorOne, Vector VectorTwo) { //Finds Difference
+		double vectorX = VectorOne.getVectorX() - VectorTwo.getVectorX();
+		double vectorY = VectorOne.getVectorY() - VectorTwo.getVectorY();
+		Vector vecDif = new Vector(vectorX, vectorY);
+		System.out.println("(" + vectorX + "," + vectorY + ")");
+		return vecDif;
+	}
+
+	public static double VectorMag(Vector VectorOne) { //Gets Magnitude of given Vector
+		double mag = Math.sqrt(Math.pow(VectorOne.getVectorX(), 2) + Math.pow(VectorOne.getVectorY(), 2));
+		System.out.println(mag);
+		return mag;
+	}
+
+	public static Vector VectorScalar(Vector VectorOne, double scalar) { //Multiplies by given scalar
+		Vector vecSca = new Vector(VectorOne.getVectorX() * scalar, VectorOne.getVectorY() * scalar);
+		System.out.println("(" + VectorOne.getVectorX() * scalar + "," + VectorOne.getVectorY() * scalar + ")");
+		return vecSca;
+	}
+
+	public static double VectorDot(Vector VectorOne, Vector VectorTwo) { //Gets Dot Product
+		double dot = VectorOne.getVectorX() * VectorTwo.getVectorX() + VectorOne.getVectorY() * VectorTwo.getVectorY();
+		System.out.println(dot);
+		return dot;
+	}
+	
+	public static double VectorAngle(Vector VectorOne, Vector VectorTwo) { //Finds angle between Vectors
+		double dot =  VectorOne.getVectorX() * VectorTwo.getVectorX() + VectorOne.getVectorY() * VectorTwo.getVectorY();
+		double magOne = Math.sqrt(Math.pow(VectorOne.getVectorX(), 2) + Math.pow(VectorOne.getVectorY(), 2));
+		double magTwo = Math.sqrt(Math.pow(VectorOne.getVectorX(), 2) + Math.pow(VectorOne.getVectorY(), 2));
+		double magMult = magOne * magTwo;
+		double finalM = dot / magMult;
+		double angle = Math.toDegrees(Math.acos(finalM));
+		System.out.println(angle);
+		return angle;
+	}
+}

@@ -1,0 +1,52 @@
+import java.io.*;
+import java.util.*;
+/**
+This is a word unscrambler that takes a string of letters and searches through a word
+file to find anagrams of those letters. 
+@author Julius Zhesi Fan
+@date 10/22/2016
+ */
+public class ProgramAssignment2 {
+	public static void main(String []args) throws FileNotFoundException {
+		System.out.println("Type a string of letters:");
+		Scanner dictionary = new Scanner(new FileInputStream(args[0])); /* Reads the txt with all words */
+		Scanner reader = new Scanner(System.in); /* Reads the user's input for anagram */
+		String scramble = reader.next();
+		int primes[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 
+		43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101}; /* List of primes to have different sums */
+		int scrambleArray = sorter(scramble, primes);
+		while(dictionary.hasNext()){ /* Goes through each word in the dictionary */
+			String checker = dictionary.next();
+			if (checker.length() == scramble.length()){ /* Eliminates long/short ones */
+				if (scrambleArray == sorter(checker, primes)){
+					if (!checker.equals(scramble)){
+						System.out.println(checker);
+					}
+				}
+			}
+		}
+		System.out.println("Do another (y/n)?");
+		Scanner yesN = new Scanner(System.in);
+		String yesNo = yesN.next();
+		if (yesNo.equals("y")){
+			main(args);
+		}
+		reader.close();
+		dictionary.close();
+		yesN.close();
+		return;
+	}
+	/*
+	 * The method sorter uses the prime numbers to get a product that is always different
+	 * this results in only the same product for words with the same letters.
+	 */
+	public static int sorter(String s, int[] primeList){
+		char scrambledA[] = s.toCharArray();
+		int product = 1;
+		for (int i = 0; i < scrambledA.length; i++){
+			int index = (int)scrambledA[i] - 97;
+			product *= primeList[index];
+		}
+		return product;
+	}
+}

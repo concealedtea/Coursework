@@ -1,0 +1,104 @@
+import java.io.FileNotFoundException;
+import java.util.*;
+
+/**
+ * This is an interactive Game of Craps implemented in Java
+ * @author Julius Zhesi Fan
+ * @date 10/07/2016
+ */
+public class PA3 {
+	public static void main(String[] args) throws FileNotFoundException {
+		Random rand = new Random();
+		Scanner reader = new Scanner(System.in); /* Reads the user's input */
+		System.out.println("Enter the seed: "); // Reads seed to have consistent results
+		int seed = reader.nextInt();
+		rand.setSeed(seed);
+		System.out.println("How many chips do you want?");
+		int chips = reader.nextInt();
+		System.out.println("Enter bet: ");
+		int bet = reader.nextInt();
+		while (bet > chips){ // Checks to make sure bet is able to be bet
+			System.out.println("Please enter a proper bet: ");
+			System.out.println("Enter bet: ");
+			bet = reader.nextInt();
+		}
+		System.out.println("Press return to roll the dice");
+		reader.nextLine();
+		reader.nextLine();
+		while (chips - bet >= 0 && chips > 0) { // Checks to make sure at all times you have chips
+			int toss = rand.nextInt(6) + 1;
+			int tossTwo = rand.nextInt(6) + 1;
+			int point = toss + tossTwo;
+			System.out.println("The rolls are " + toss + ", " + tossTwo);
+			if (point == 7 || point == 11) { // Rules
+				chips += bet;
+				System.out.println("You won, you now have " + chips + " chips");
+				System.out.println("Enter bet: ");
+				bet = reader.nextInt();
+				while (bet > chips){
+					System.out.println("Please enter a proper bet: ");
+					System.out.println("Enter bet: ");
+					bet = reader.nextInt();
+				}
+			} else if (point == 2 || point == 3 || point == 12) { // Rules
+				chips -= bet;
+				System.out.println("You lost, you now have " + chips + " chips");
+				if (chips == 0){
+					System.out.println("You are out of chips!");
+					return;
+				}
+				System.out.println("Enter bet: ");
+				bet = reader.nextInt();
+				while (bet > chips){
+					System.out.println("Please enter a proper bet: ");
+					System.out.println("Enter bet: ");
+					bet = reader.nextInt();
+				}
+			} else {
+				System.out.println("The point is " + point);
+				int temppoint = 0;
+				while (temppoint != point) { // As long as the original doesn't come up
+					System.out.println("Press return to roll the dice");
+					reader.nextLine();
+					reader.nextLine();
+					int tossThree = rand.nextInt(6) + 1;
+					int tossFour = rand.nextInt(6) + 1;
+					temppoint = tossThree + tossFour;
+					System.out.println("The rolls are " + tossThree + ", " + tossFour);
+					if (temppoint == 7) {
+						chips -= bet;
+						System.out.println("You lost, you now have " + chips + " chips");
+						if (chips == 0){
+							System.out.println("You are out of chips!");
+							return;
+						}
+						System.out.println("Enter bet: ");
+						bet = reader.nextInt();
+						while (bet > chips){
+							System.out.println("Please enter a proper bet: ");
+							System.out.println("Enter bet: ");
+							bet = reader.nextInt();
+						}
+						break;
+					}
+					if (temppoint == point) { // Checks to see if the number was the original
+						chips += bet;
+						System.out.println("You won, you now have " + chips + " chips");
+						System.out.println("Enter bet: ");
+						bet = reader.nextInt();
+						while (bet > chips){
+							System.out.println("Please enter a proper bet: ");
+							System.out.println("Enter bet: ");
+							bet = reader.nextInt();
+						}
+						break;
+					}
+				}
+			}
+		}
+		if (chips == 0) { // If you run out, the program closes
+			System.out.println("You are out of chips!");
+			return;
+		}
+	}
+}

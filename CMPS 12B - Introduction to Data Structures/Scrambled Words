@@ -1,0 +1,35 @@
+import java.util.*;
+import java.io.*;
+/**
+This is a word scrambler (anagram generator) that scrambles a randomly selected word 
+from a word file on the command line.
+@author Julius Zhesi Fan
+@date 10/07/2016
+*/
+class ProgramAssignment1 {
+    public static void main(String[] args) throws FileNotFoundException {
+        Random rand = new Random(); /*Creates new Random instance*/
+        Scanner in = new Scanner (new FileInputStream(args[0]));
+        int randN = rand.nextInt(in.nextInt()) + 1; /* Creates a random # < total*/
+        int i = 0;
+        String selectedWord = new String();
+        while (i <= randN){ /* Progresses the list until it hits the random one*/
+            in.next();
+            if (i == randN){
+                selectedWord =  in.next(); /* Sets selectedWord to the random one*/
+            }
+            i++;
+        }
+        StringBuffer temp = new StringBuffer(selectedWord);
+        StringBuffer shuffled = new StringBuffer();
+        while(temp.length() != 0){ /* while loop to loop as many times as there are characters*/
+            int index = rand.nextInt(temp.length());
+            char c = temp.charAt(index);
+            shuffled.append(c);
+            temp.deleteCharAt(index);
+        }
+        System.out.println("Original Word: " + selectedWord); /* Prints original word*/
+        System.out.println("Final Word: " + shuffled.toString()); /* Prints scrambled word*/
+        in.close();
+    }
+}
